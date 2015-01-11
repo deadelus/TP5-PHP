@@ -66,7 +66,7 @@ if ($currentUser) {
 
 ?>
 
-<h2><?php echo $poll['question']; ?></h2>
+<h2><?php echo htmlspecialchars($poll['question']); ?></h2>
 
 <form method="post">
 
@@ -79,7 +79,7 @@ if ($currentUser) {
     <?php if ($currentUser && !$userAnswered) { ?>
     <input type="radio" name="answer" value="<?php echo $answer; ?>" />
     <?php } ?>
-    <?php echo $poll['answer'.$answer]; ?>
+    <?php echo htmlspecialchars($poll['answer'.$answer]); ?>
     </label>
 </h3>
 

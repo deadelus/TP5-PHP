@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
 ?>
 <div class="alert alert-danger">
-    L'utilisateur <?php echo $_POST['login']; ?> n'existe pas.
+    L'utilisateur <?php echo htmlspecialchars($_POST['login']); ?> n'existe pas.
 </div>
 <?php
             }
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <?php if ($currentUser) { ?>
 <div class="alert alert-success">
-    Vous êtes identifiés en tant que <?php echo $currentUser['login']; ?>
+    Vous êtes identifiés en tant que <?php echo htmlspecialchars($currentUser['login']); ?>
 </div>
 <?php } else { ?>
 <form method="post" class="form-horizontal">
