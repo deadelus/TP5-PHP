@@ -5,7 +5,9 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_POST['login']) && !empty($_POST['password'])) {
-            $req = $pdo->query('SELECT * FROM users WHERE login="'.$_POST['login'].'"');
+            $req = $pdo->prepare('SELECT * FROM users WHERE login=:login');
+            $req->bindParam(':login',$_POST['login']);
+            $req->execute();
             if ($req->rowCount()) {
                 $user = $req->fetch();
                 if ($user['password'] == $_POST['password']) {

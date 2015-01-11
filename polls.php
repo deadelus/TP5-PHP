@@ -4,7 +4,9 @@
 
 <ul class="list-group">
 <?php
-$query = $pdo->query('SELECT * FROM polls');
+$stmt = $pdo->prepare('SELECT * FROM polls');
+$stmt->execute();
+$query = $stmt->fetchAll();
 
 foreach ($query as $poll) {
 ?>

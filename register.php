@@ -5,7 +5,10 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_POST['login']) && !empty($_POST['password'])) {
-            $req = $pdo->query('SELECT COUNT(*) as nb FROM users WHERE login="'.$_POST['login'].'"')->fetch();
+            $stmt = $pdo->prepare('SELECT COUNT(*) as nb FROM users WHERE login=:login');
+            $stmt->bindParam(':login',$_POST['login']);
+            $stmt->execute();
+            $req = $stmt->fetch();
             if ($req['nb'] == 0) {
                 $query = $pdo->prepare('INSERT INTO users (login, password) VALUES (?,?)');
                 $query->execute(array($_POST['login'], $_POST['password']));

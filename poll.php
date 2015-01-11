@@ -3,7 +3,10 @@
 <?php
 $poll = false;
 if (isset($_GET['id'])) {
-    $query = $pdo->query('SELECT * FROM polls WHERE id="'.$_GET['id'].'"');
+    $query = $pdo->prepare('SELECT * FROM polls WHERE id=:id');
+    $query->bindParam(':id',$_GET['id']);
+    $query->execute();
+
     if ($query->rowCount()) {
         $poll = $query->fetch();
     }
@@ -23,14 +26,24 @@ $userAnswered = false;
 $answers = null;
 
 if ($currentUser) {
-    $query = $pdo->query('SELECT * FROM answers WHERE poll_id="'.$poll['id'].'" AND user_id="'.$currentUser['id'].'"');
+    $query = $pdo->prepare('SELECT * FROM answers WHERE poll_id=:pollid AND user_id=:userid');
+    $query->bindParam(':pollid',$poll['id']);
+    $query->bindParam(':userid',$currentUser['id']);
+    $query->execute();
+
     if ($query->rowCount()) {
         $userAnswered = true;
-    } else {
+    } else if (isset($_POST['answer'])){
         if ($_SERVER['REQUEST_METHOD']=='POST' && !empty($_POST['answer']) &&
             $_POST['answer']=='1' || $_POST['answer']=='2' || $_POST['answer']=='3') {
-                $pdo->exec('INSERT INTO answers (user_id, poll_id, answer)
-                    VALUES ("'.$currentUser['id'].'","'.$poll['id'].'","'.$_POST['answer'].'")');
+
+                $req = $pdo->prepare('INSERT INTO answers (user_id, poll_id, answer)
+                    VALUES (:id,:pollid, :aw)');
+                $req->bindParam(':id',$currentUser['id']);
+                $req->bindParam(':pollid',$poll['id']);
+                $req->bindParam(':aw',$_POST['answer']);
+                $req->execute();
+
                 $userAnswered = true;
             }
     }
@@ -38,8 +51,13 @@ if ($currentUser) {
     if ($userAnswered) {
         $answers = array();
         foreach (array(1,2,3) as $answer) {
-            $query = $pdo->query('SELECT COUNT(*) as nb FROM answers WHERE 
-                poll_id="'.$poll['id'].'" AND answer="'.$answer.'"')->fetch();
+            $stmt = $pdo->prepare('SELECT COUNT(*) as nb FROM answers WHERE 
+                poll_id=:pollid AND answer=:asw');
+
+            $stmt->bindParam(':pollid',$poll['id']);
+            $stmt->bindParam(':asw',$answer);
+            $stmt->execute();
+            $query = $stmt->fetch();
             $answers[$answer] = $query['nb'];
         }
         $total = array_sum($answers);
