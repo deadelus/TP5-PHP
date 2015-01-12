@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $req->execute();
             if ($req->rowCount()) {
                 $user = $req->fetch();
-                if (md5($user['password']) == $_POST['password']) {
+                if ($user['password'] == md5($_POST['password'])) {
                     $currentUser = $user;
                     $_SESSION['user'] = $currentUser['id'];
 ?>

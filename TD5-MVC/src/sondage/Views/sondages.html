@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h2>Sondages</h2>
+<ul class="list-group">
+{% if sondages %}
+    {% for sondage in sondages %}
+    <li class="list-group-item">
+	    <strong>{{ sondage.question }}</strong>
+	    <a href="{{ path('sondage', {id: sondage.id}) }}" class="btn btn-xs btn-success pull-right">
+	        Voir &raquo;
+	    </a>
+	</li>
+    {% endfor %}
+{% else %}
+    Il n'y a aucun sondage.
+{% endif %}
+</ul>
+{% endblock %}

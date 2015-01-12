@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% if app.session.get('user') is defined %}
+	{% set type = 'radio' %}
+{% else %}
+	{% set type = '' %}	
+{% endif %}
+
+{% block content %}
+{% if sondage %}
+<h2>{{ sondage.question }}</h2>
+
+<form method="post">
+{% if sondage.answer1 %}
+<h3>
+    <label>
+        <input type="{{type}}" name="answer" value="1" />
+        {{ sondage.answer1 }}</label>
+</h3>
+{% endif %}
+
+{% if sondage.answer2 %}
+<h3>
+    <label>
+        <input type="{{type}}" name="answer" value="2" />
+        {{ sondage.answer2 }}</label>
+</h3>
+{% endif %}
+
+{% if sondage.answer3 %}
+<h3>
+    <label>
+        <input type="{{type}}" name="answer" value="2" />
+        {{ sondage.answer3 }}</label>
+</h3>
+{% endif %}
+{% endif %}
+{% if app.session.get('user') is defined %}
+    <input class="btn btn-success pull-right" type="submit" value="Participer!" />
+{% else %}
+    {% include 'warning.html' %}
+{% endif %}
+
+</form>
+{% endblock %}
