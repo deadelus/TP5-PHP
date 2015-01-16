@@ -9,37 +9,34 @@
 {% block content %}
 {% if sondage %}
 <h2>{{ sondage.question }}</h2>
+<h4>Question posée par {{ sondage.auteur }}</h4>
+<form method="post" action="{{ path('sondage', {id: sondage.id}) }}">
+    {% if sondage.answer1 %}
+    <h3>
+        <label>
+            <input type="{{type}}" name="answer" value="1" />
+            {{ sondage.answer1 }}</label>
+    </h3>
+    {% endif %}
 
-<form method="post">
-{% if sondage.answer1 %}
-<h3>
-    <label>
-        <input type="{{type}}" name="answer" value="1" />
-        {{ sondage.answer1 }}</label>
-</h3>
-{% endif %}
+    {% if sondage.answer2 %}
+    <h3>
+        <label>
+            <input type="{{type}}" name="answer" value="2" />
+            {{ sondage.answer2 }}</label>
+    </h3>
+    {% endif %}
 
-{% if sondage.answer2 %}
-<h3>
-    <label>
-        <input type="{{type}}" name="answer" value="2" />
-        {{ sondage.answer2 }}</label>
-</h3>
-{% endif %}
-
-{% if sondage.answer3 %}
-<h3>
-    <label>
-        <input type="{{type}}" name="answer" value="2" />
-        {{ sondage.answer3 }}</label>
-</h3>
-{% endif %}
-{% endif %}
-{% if app.session.get('user') is defined %}
+    {% if sondage.answer3 %}
+    <h3>
+        <label>
+            <input type="{{type}}" name="answer" value="2" />
+            {{ sondage.answer3 }}</label>
+    </h3>
+    {% endif %}
     <input class="btn btn-success pull-right" type="submit" value="Participer!" />
-{% else %}
+{% elseif warning is defined %}
     {% include 'warning.html' %}
 {% endif %}
-
 </form>
 {% endblock %}

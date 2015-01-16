@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8" />
+        <meta charset="utf-8"/>
         <title>Social Sondage</title>
         <link rel="stylesheet" href="{{ app.request.basePath }}/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="{{ app.request.basePath }}/css/style.css" />
@@ -10,7 +10,7 @@
     <body>
         
     <h1>
-        <img src="imgs/poll.png" />
+        <img src="{{ app.request.basePath }}/imgs/poll.png"/>
         Social <span class="sondage">Sondage</span>
     </h1>
     <nav class="navbar navbar-default">
@@ -18,23 +18,20 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li><a href="{{ path('home') }}">Accueil</a></li>
-            
+            {% set active_page = active_page|default('home') %}
+            <li {% if active_page == 'home' %}class="active"{% endif %}><a href="{{ path('home') }}">Accueil</a></li>
             {% if app.session.get('user') %}
-            <li><a href="{{ path('logout') }}">Deconnection</a></li>
-            <li><a href="{{ path('addsondage') }}">Nouveau sondage</a></li>
+            <li {% if active_page == 'logout' %}class="active"{% endif %}><a href="{{ path('logout') }}">Deconnection</a></li>
+            <li {% if active_page == 'addsondage' %}class="active"{% endif %}><a href="{{ path('addsondage') }}">Nouveau sondage</a></li>
             {% else %}
-            <li><a href="{{ path('signin') }}">Inscription</a></li>
-            <li><a href="{{ path('login') }}">Identification</a></li>
+            <li {% if active_page == 'signin' %}class="active"{% endif %}><a href="{{ path('signin') }}">Inscription</a></li>
+            <li {% if active_page == 'login' %}class="active"{% endif %}><a href="{{ path('login') }}">Identification</a></li>
             {% endif %}
-            <li><a href="{{ path('sondages') }}">Sondages</a></li>
+            <li {% if active_page == 'sondages' %}class="active"{% endif %}><a href="{{ path('sondages') }}">Sondages</a></li>
 
           </ul>
         </div>
     </nav> 
-
-    
-    {% block content %}{% endblock %}
 
     {# defined works with variable names #}
     {% if error is defined %}
@@ -43,6 +40,10 @@
     {% if success is defined %}
         {% include 'success.html' %}
     {% endif %}
+    
+    {% block content %}{% endblock %}
+
+    
     
     </body>
 </html>
